@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Factories\BrandCategoryFactory;
+use Database\Factories\BrandFactory;
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,12 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\Category::factory(10)->create();
-         \App\Models\Brand::factory(100)->create();
-         \App\Models\BrandCategory::factory(100)->create();
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call(CategorySeeder::class);
+        $this->call(BrandSeeder::class);
+        $this->call(ImageSeeder::class);
+
+
+
     }
 }
