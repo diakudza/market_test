@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;

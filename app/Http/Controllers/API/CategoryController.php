@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\BrandCollection;
+use App\Http\Resources\CategoryCollection;
+use App\Http\Resources\CategoryOneResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,10 +18,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Category $category)
     {
-        $category = Category::all();
-        return CategoryResource::collection($category);
+        return new CategoryCollection($category->paginate(5));
     }
 
     /**
@@ -57,7 +58,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return new CategoryResource($category);
+        return new CategoryOneResource($category);
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ImageResource;
+use App\Http\Resources\ImageOneResource;
 use App\Http\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,7 +15,7 @@ class ImageController extends Controller
     public function index()
     {
         $images = Image::all();
-        return ImageResource::collection($images);
+        return ImageOneResource::collection($images);
     }
 
     /**
@@ -27,7 +27,7 @@ class ImageController extends Controller
      */
     public function show(string $scope)
     {
-        return ImageResource::collection(
+        return ImageOneResource::collection(
             (new Image())->image($scope)->get()
         ); //скоуп image(), не знал куда его применить. Сделал сюда
     }
