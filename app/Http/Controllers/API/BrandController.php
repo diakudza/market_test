@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BrandCollection;
 use App\Http\Resources\BrandResource;
 use App\Models\Brand;
 use App\Models\Category;
@@ -17,10 +18,9 @@ class BrandController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Brand $brands)
     {
-        $brands = Brand::all();
-        return BrandResource::collection($brands);
+        return new BrandCollection($brands->paginate(3));
     }
 
     /**
@@ -28,7 +28,7 @@ class BrandController extends Controller
      *
      * @param Request $request
      * @param Brand $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request, Brand $brand)
@@ -42,7 +42,7 @@ class BrandController extends Controller
 
         if ($validator->fails()) {
             $error = $validator->errors();
-            return response(['error' => $error], 400);
+            return response()->json(['error' => $error], 400);
         }
 
         $validated = $validator->validated();
@@ -50,7 +50,7 @@ class BrandController extends Controller
         $brand->fill($validated);
         $brand->save();
 
-        return response(['message' => 'Brand was created'], 201);
+        return response()->json(['message' => 'Brand was created'], 201);
     }
 
     /**
@@ -69,7 +69,7 @@ class BrandController extends Controller
      *
      * @param Request $request
      * @param \App\Models\Brand $brand
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, Brand $brand)
@@ -88,14 +88,14 @@ class BrandController extends Controller
         $validated = $validator->validated();
         $brand->update($validated);
         $brand->save();
-        return response(['message' => 'Brand was updated'], 202);
+        return response()->json(['message' => 'Brand was updated'], 202);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -103,9 +103,9 @@ class BrandController extends Controller
 
         if ($brand) {
             $brand->deleteOrFail();
-            return response(['message' => 'brand was deleted'], 200);
+            return response()->json(['message' => 'brand was deleted'], 200);
         } else {
-            return response(['message' => 'brand wasn\'t deleted'], 400);
+            return response()->json(['message' => 'brand wasn\'t deleted'], 400);
         }
     }
 
@@ -131,7 +131,6 @@ class BrandController extends Controller
             $search = $search->whereRelation(
                 'categories', 'title', 'LIKE', '%'. $validated['category'] .'%');
         }
-
-        return BrandResource::collection($search->get());
+        return new BrandCollection($search->paginate(3));
     }
 }
